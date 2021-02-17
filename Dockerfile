@@ -1,34 +1,55 @@
 FROM rocker/r-ver:4.0.3
 LABEL maintainer="Mark Wheldon <biostatmark@gmail.com>"
 
-###### BELOW: taken from 'https://github.com/andrewheiss/tidyverse-rstanarm/blob/master/Dockerfile' but based on 'rocker/r-ver:4.0.3' instead of 'rocker/tidyverse'
+###### BELOW: taken from 'https://github.com/andrewheiss/tidyverse-stan/blob/master/3.5.1/Dockerfile'
 
-# ------------------------------
-# Install rstanarm and friends
-# ------------------------------
-# Docker Hub (and Docker in general) chokes on memory issues when compiling
-# with gcc, so copy custom CXX settings to /root/.R/Makevars and use ccache and
-# clang++ instead
+# Install ed, since nloptr needs it to compile
+# Install clang and ccache to speed up Stan installation
+# Install libxt-dev for Cairo 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       apt-utils \
+       ed \
+       libnlopt-dev \
+       clang \
+       ccache \
+       libxt-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/
 
-# Make ~/.R
-RUN mkdir -p $HOME/.R
+# Set up environment
+# Use correct Stan Makevars: https://github.com/stan-dev/rstan/wiki/Installing-RStan-on-Mac-or-Linux#prerequisite--c-toolchain-and-configuration
+RUN mkdir -p $HOME/.R \
+    # Add global configuration files
+    # Docker chokes on memory issues when compiling with gcc, so use ccache and clang++ instead
+    && echo '\n \
+        \nCC=/usr/bin/ccache clang \
+        \n \
+        \n# Use clang++ and ccache \
+        \nCXX=/usr/bin/ccache clang++ -Qunused-arguments  \
+        \n \
+        \n# Optimize building with clang \
+        \nCXXFLAGS=-g -O3 -fstack-protector --param=ssp-buffer-size=4 -Wformat -Werror=format-security -D_FORTIFY_SOURCE=2 -g -pedantic -g0 \
+        \n \
+        \n# Stan stuff \
+        \nCXXFLAGS+=-O3 -mtune=native -march=native -Wno-unused-variable -Wno-unused-function -Wno-macro-redefined \
+        \n' >> $HOME/.R/Makevars \
+    # Make R use ccache correctly: http://dirk.eddelbuettel.com/blog/2017/11/27/
+    && mkdir -p $HOME/.ccache/ \
+    && echo "max_size = 5.0G \
+        \nsloppiness = include_file_ctime \
+        \nhash_dir = false \
+        \n" >> $HOME/.ccache/ccache.conf \
+    # Add configuration files for RStudio user
+    && mkdir -p /home/rstudio/.R/ \
+    && echo '\n \
+        \n# Stan stuff \
+        \nCXXFLAGS=-O3 -mtune=native -march=native -Wno-unused-variable -Wno-unused-function -Wno-macro-redefined \
+        \n' >> /home/rstudio/.R/Makevars \
+    && echo "rstan::rstan_options(auto_write = TRUE)\n" >> /home/rstudio/.Rprofile \
+    && echo "options(mc.cores = parallel::detectCores())\n" >> /home/rstudio/.Rprofile
 
-# $HOME doesn't exist in the COPY shell, so be explicit
-COPY R/Makevars /root/.R/Makevars
-
-# Install ggplot extensions like ggstance and ggrepel
-# Install ed, since nloptr needs it to compile.
-# Install all the dependencies needed by rstanarm and friends
-# Install multidplyr for parallel tidyverse magic
-RUN apt-get -y --no-install-recommends install \
-    ed \
-    clang  \
-    ccache \
-    && install2.r --error \
-        ggstance ggrepel \
-        miniUI PKI RCurl RJSONIO packrat minqa nloptr matrixStats inline \
-        colourpicker DT dygraphs gtools rsconnect shinyjs shinythemes threejs \
-        xts bayesplot lme4 loo rstantools StanHeaders RcppEigen \
-        rstan shinystan rstanarm \
-    && R -e "library(devtools); \
-        install_github('hadley/multidplyr');"
+# Install Stan, rstan, rstanarm, brms, and friends
+RUN install2.r --error --deps TRUE \
+        rstan loo bayesplot rstanarm rstantools shinystan brms ggmcmc \
+    && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
