@@ -3,8 +3,6 @@ LABEL maintainer="Mark Wheldon <biostatmark@gmail.com>"
 
 
 
-
-
 ###### BELOW: taken from 'https://github.com/andrewheiss/tidyverse-stan/blob/master/3.5.1/Dockerfile'
 
 # Install ed, since nloptr needs it to compile
@@ -55,5 +53,5 @@ RUN mkdir -p $HOME/.R \
 
 # Install Stan, rstan, rstanarm, brms, and friends
 RUN install2.r --error --deps TRUE \
-        rstan loo bayesplot rstanarm rstantools shinystan brms ggmcmc \
+        cmdstanr rstan loo bayesplot rstanarm rstantools shinystan brms ggmcmc \
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds
