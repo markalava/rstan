@@ -52,7 +52,10 @@ RUN mkdir -p $HOME/.R \
     && echo "options(mc.cores = parallel::detectCores())\n" >> /home/rstudio/.Rprofile
 
 # Install Stan, rstan, rstanarm, brms, and friends
-RUN install2.r -r "https://mc-stan.org/r-packages/" cmdstanr
+
+RUN install2.r --error --deps TRUE abind checkmate
+ 
+RUN install2.r -r "https://mc-stan.org/r-packages/" --error --deps TRUE cmdstanr
 
 RUN install2.r --error --deps TRUE \
         rstan loo bayesplot rstanarm rstantools shinystan brms ggmcmc \
