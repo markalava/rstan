@@ -1,5 +1,9 @@
-FROM rocker/r-ver:4.0.3
+FROM rocker/tidyverse:4.0.3
 LABEL maintainer="Mark Wheldon <biostatmark@gmail.com>"
+
+
+
+
 
 ###### BELOW: taken from 'https://github.com/andrewheiss/tidyverse-stan/blob/master/3.5.1/Dockerfile'
 
