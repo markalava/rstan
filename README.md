@@ -1,2 +1,2 @@
-# rstan_no_rstudio
+# rstudio_stan
 Docker image containing R and rstan
