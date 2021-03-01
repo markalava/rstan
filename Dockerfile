@@ -59,4 +59,4 @@ RUN install2.r -r "https://mc-stan.org/r-packages/" --error --deps TRUE cmdstanr
 
 RUN install2.r --error --deps TRUE rstanarm rstantools shinystan brms 
 
-rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+RUN rm -rf /tmp/downloaded_packages/ /tmp/*.rds
