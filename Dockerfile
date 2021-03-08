@@ -16,6 +16,7 @@ RUN apt-get update \
        clang \
        ccache \
        libxt-dev \
+       libv8-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/
 
