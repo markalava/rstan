@@ -61,6 +61,4 @@ RUN install2.r --error --deps TRUE rstanarm rstantools shinystan brms
 
 RUN install2.r --error --deps TRUE furrr
 
-RUN Rscript 'remotes::install_github("timriffe/DemoTools")'
-
 RUN rm -rf /tmp/downloaded_packages/ /tmp/*.rds
