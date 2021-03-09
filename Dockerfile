@@ -3,7 +3,7 @@ LABEL maintainer="Mark Wheldon <biostatmark@gmail.com>"
 
 
 
-###### BELOW: taken from 'https://github.com/andrewheiss/tidyverse-stan/blob/master/3.5.1/Dockerfile'
+###### BELOW: based on 'https://github.com/andrewheiss/tidyverse-stan/blob/master/3.5.1/Dockerfile'
 
 # Install ed, since nloptr needs it to compile
 # Install clang and ccache to speed up Stan installation
@@ -61,6 +61,6 @@ RUN install2.r -r "https://mc-stan.org/r-packages/" --error --deps TRUE cmdstanr
 
 RUN install2.r --error --deps TRUE rstanarm rstantools shinystan brms 
 
-RUN install2.r --error --deps TRUE furrr
+RUN install2.r --error --deps TRUE furrr tictoc
 
 RUN rm -rf /tmp/downloaded_packages/ /tmp/*.rds
