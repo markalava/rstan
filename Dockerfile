@@ -17,6 +17,7 @@ RUN apt-get update \
        ccache \
        libxt-dev \
        libv8-dev \
+       build-essential \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/
 
