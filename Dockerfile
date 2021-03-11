@@ -18,6 +18,7 @@ RUN apt-get update \
        libxt-dev \
        libv8-dev \
        build-essential \
+       libgl1-mesa-dev libglu1-mesa-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/
 
@@ -61,6 +62,12 @@ RUN install2.r -r "https://mc-stan.org/r-packages/" --error --deps TRUE cmdstanr
 
 RUN install2.r --error --deps TRUE rstanarm rstantools shinystan brms 
 
-RUN install2.r --error --deps TRUE furrr tictoc
+## Extra packages for this project
+
+RUN install2.r --error --deps TRUE tictoc 
+
+## Packages for DemoTools
+
+RUN install2.r --error --deps TRUE ungroup rgl
 
 RUN rm -rf /tmp/downloaded_packages/ /tmp/*.rds
