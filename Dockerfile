@@ -57,17 +57,18 @@ RUN mkdir -p $HOME/.R \
 # Install Stan, rstan, rstanarm, brms, and friends
 
 RUN install2.r --error --deps TRUE rstan loo bayesplot
-
 RUN install2.r -r "https://mc-stan.org/r-packages/" --error --deps TRUE cmdstanr
-
 RUN install2.r --error --deps TRUE rstanarm rstantools shinystan brms 
+
+## Packages for DemoTools (no 'suggests'). Separately for debugging. 
+
+RUN install2.r --error ungroup
+RUN install2.r --error rgl
 
 ## Extra packages for this project
 
-RUN install2.r --error --deps TRUE tictoc 
+RUN install2.r --error --deps tictoc 
 
-## Packages for DemoTools
-
-RUN install2.r --error --deps TRUE ungroup rgl
+## Clean up
 
 RUN rm -rf /tmp/downloaded_packages/ /tmp/*.rds
