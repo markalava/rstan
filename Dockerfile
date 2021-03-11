@@ -60,10 +60,11 @@ RUN install2.r --error --deps TRUE rstan loo bayesplot
 RUN install2.r -r "https://mc-stan.org/r-packages/" --error --deps TRUE cmdstanr
 RUN install2.r --error --deps TRUE rstanarm rstantools shinystan brms 
 
-## Packages for DemoTools (no 'suggests'). Separately for debugging. 
+## DemoTools (no 'suggests'). 
 
-RUN install2.r --error ungroup
-RUN install2.r --error rgl
+RUN install2.r --error ungroup rgl
+RUN Rscript -e 'remotes::install_github("josehcms/fertestr")'
+RUN Rscript -e 'remotes::install_github("timriffe/DemoTools")'
 
 ## Extra packages for this project
 
