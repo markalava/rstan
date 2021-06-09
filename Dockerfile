@@ -58,7 +58,9 @@ RUN mkdir -p $HOME/.R \
 # Install Stan, rstan, rstanarm, brms, and friends
 
 RUN install2.r --error --deps TRUE rstan loo bayesplot
-RUN install2.r -r "https://mc-stan.org/r-packages/" --error --deps TRUE cmdstanr
+#RUN install2.r -r "https://mc-stan.org/r-packages/" --error --deps TRUE cmdstanr
+RUN Rscript -e 'install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))'
+RUN Rscript -e 'cmdstanr::install_cmdstan()'
 RUN install2.r --error --deps TRUE rstanarm rstantools shinystan brms 
 
 # Install cmdstan
