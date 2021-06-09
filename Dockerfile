@@ -61,6 +61,14 @@ RUN install2.r --error --deps TRUE rstan loo bayesplot
 RUN install2.r -r "https://mc-stan.org/r-packages/" --error --deps TRUE cmdstanr
 RUN install2.r --error --deps TRUE rstanarm rstantools shinystan brms 
 
+# Install cmdstan
+
+RUN cd /opt \
+    && git clone https://github.com/stan-dev/cmdstan.git --recursive \
+    && cd cmdstan \
+    && make build \
+    && export PATH="/opt/cmdstan/bin:$PATH"
+
 ## DemoTools (no 'suggests'). 
 
 RUN install2.r --error ungroup rgl
