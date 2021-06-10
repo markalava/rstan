@@ -11,6 +11,7 @@ LABEL maintainer="Mark Wheldon <biostatmark@gmail.com>"
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
        apt-utils \
+       nano \
        curl \
        ed \
        libnlopt-dev \
