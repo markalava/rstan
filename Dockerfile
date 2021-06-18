@@ -80,7 +80,7 @@ RUN Rscript -e 'remotes::install_github("cimentadaj/DDSQLtools")'
 
 ## Extra packages for this project
 
-RUN install2.r --error --deps tictoc egg
+RUN install2.r --error --deps TRUE tictoc egg
 
 ## Clean up
 
